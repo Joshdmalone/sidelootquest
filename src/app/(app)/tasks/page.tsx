@@ -1,7 +1,7 @@
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { redirect } from "next/navigation";
-import { TasksView } from "./tasks-view";
+import { TasksView, type TaskRow } from "./tasks-view";
 
 export const dynamic = "force-dynamic";
 
@@ -29,5 +29,5 @@ export default async function TasksPage() {
     }),
   ]);
 
-  return <TasksView tasks={tasks} projects={projects} clients={clients} />;
+  return <TasksView tasks={tasks as unknown as TaskRow[]} projects={projects} clients={clients} />;
 }

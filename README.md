@@ -31,17 +31,26 @@ General task managers (TickTick, Todoist, Things, TickTick) treat every task the
 
 - **Next.js 16** (App Router, Turbopack)
 - **React 19.2**
-- **Prisma 7** + PostgreSQL (Neon free tier recommended)
-- **NextAuth v5** (GitHub OAuth)
+- **Prisma 7** + **SQLite** (via libsql adapter — zero-setup local, Turso for prod)
+- **NextAuth v5** (GitHub OAuth + dev-mode Credentials bypass)
 - **Tailwind CSS v4** + shadcn-style Radix primitives
 - **TypeScript** end-to-end
 - Dark-first UI (this is an after-5pm app)
 
-## Quick start
+## Quick start (zero external services)
 
-See [SETUP.md](./SETUP.md) for a 5-minute local setup.
+```bash
+git clone https://github.com/Joshdmalone/sidelootquest.git
+cd sidelootquest
+npm install
+cp .env.example .env
+npm run db:push && npm run db:seed
+npm run dev
+```
 
-Deploy to Vercel: see the bottom of SETUP.md.
+Open [http://localhost:3000](http://localhost:3000) → click **Dev sign in** → you're in.
+
+See [SETUP.md](./SETUP.md) for deployment to Vercel with Turso + GitHub OAuth.
 
 ## Roadmap
 

@@ -33,7 +33,7 @@ import { createTask, toggleTask, deleteTask } from "../actions";
 
 type Project = { id: string; name: string; color: string };
 type Client = { id: string; name: string };
-type TaskRow = {
+export type TaskRow = {
   id: string;
   title: string;
   completed: boolean;

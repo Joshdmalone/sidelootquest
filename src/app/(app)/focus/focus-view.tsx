@@ -16,10 +16,10 @@ import {
 import { cn, formatSeconds, formatMoney, formatHours } from "@/lib/utils";
 import { startTimer, stopTimer } from "../actions";
 
-type Task = {
+export type Task = {
   id: string;
   title: string;
-  billingType: "NONE" | "HOURLY" | "FIXED";
+  billingType: string; // validated to NONE|HOURLY|FIXED at write time via Zod
   rateCents: number | null;
   priceCents: number | null;
 };

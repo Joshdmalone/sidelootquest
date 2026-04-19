@@ -1,6 +1,9 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { Swords } from "lucide-react";
+import { Swords, Zap } from "lucide-react";
+import { auth, signIn, devSignInEnabled } from "@/lib/auth";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 
 function GitHubIcon({ className }: { className?: string }) {
   return (
@@ -9,13 +12,12 @@ function GitHubIcon({ className }: { className?: string }) {
     </svg>
   );
 }
-import { auth, signIn } from "@/lib/auth";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
 
 export default async function SignInPage() {
   const session = await auth();
   if (session?.user) redirect("/tasks");
+
+  const githubConfigured = !!(process.env.AUTH_GITHUB_ID && process.env.AUTH_GITHUB_SECRET);
 
   return (
     <div className="flex min-h-screen items-center justify-center px-6">
@@ -29,20 +31,48 @@ export default async function SignInPage() {
           <CardContent className="p-8">
             <h1 className="mb-2 text-center text-2xl font-bold">Start your quest</h1>
             <p className="mb-8 text-center text-sm text-muted-foreground">
-              Sign in with GitHub to track tasks, hours, and revenue.
+              {githubConfigured
+                ? "Sign in with GitHub to track tasks, hours, and revenue."
+                : "Running locally? Use Dev Sign-in — no accounts required."}
             </p>
 
-            <form
-              action={async () => {
-                "use server";
-                await signIn("github", { redirectTo: "/tasks" });
-              }}
-            >
-              <Button type="submit" className="w-full" size="lg">
-                <GitHubIcon className="h-4 w-4" />
-                Continue with GitHub
-              </Button>
-            </form>
+            <div className="space-y-3">
+              {githubConfigured && (
+                <form
+                  action={async () => {
+                    "use server";
+                    await signIn("github", { redirectTo: "/tasks" });
+                  }}
+                >
+                  <Button type="submit" className="w-full" size="lg">
+                    <GitHubIcon className="h-4 w-4" />
+                    Continue with GitHub
+                  </Button>
+                </form>
+              )}
+
+              {devSignInEnabled && (
+                <form
+                  action={async () => {
+                    "use server";
+                    await signIn("dev", { redirectTo: "/tasks" });
+                  }}
+                >
+                  <Button type="submit" variant="gold" className="w-full" size="lg">
+                    <Zap className="h-4 w-4" />
+                    Dev sign in (no account)
+                  </Button>
+                </form>
+              )}
+
+              {!githubConfigured && !devSignInEnabled && (
+                <div className="rounded-md border border-destructive/40 bg-destructive/10 p-3 text-xs text-destructive">
+                  No auth provider configured. Set <code>AUTH_GITHUB_ID</code> +{" "}
+                  <code>AUTH_GITHUB_SECRET</code> in .env, or set{" "}
+                  <code>ALLOW_DEV_SIGNIN=true</code> for dev bypass.
+                </div>
+              )}
+            </div>
 
             <p className="mt-6 text-center text-xs text-muted-foreground">
               By signing in you agree to be a cool and kind person. That&apos;s it.

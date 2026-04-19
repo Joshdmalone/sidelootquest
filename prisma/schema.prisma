@@ -1,6 +1,6 @@
-// SideLootQuest — Prisma schema
-// Generator is the new Prisma 7 `prisma-client` (outputs TS into src/generated/prisma).
-// Import from "@/generated/prisma", NOT "@prisma/client".
+// SideLootQuest — Prisma schema (SQLite via libsql adapter)
+// Local dev: DATABASE_URL=file:./dev.db
+// Prod: swap to Turso (DATABASE_URL=libsql://...?authToken=...) or Postgres.
 
 generator client {
   provider = "prisma-client"
@@ -8,7 +8,7 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "sqlite"
 }
 
 // ---------------------------------------------------------------------------
@@ -24,8 +24,8 @@ model User {
   createdAt     DateTime  @default(now())
 
   // Hustle settings
-  taxRatePct      Int    @default(25) // % set aside per completed paid task
-  weeklyGoalCents Int    @default(0)  // weekly earnings goal, in cents
+  taxRatePct      Int    @default(25)
+  weeklyGoalCents Int    @default(0)
   timezone        String @default("America/New_York")
 
   accounts    Account[]
@@ -76,18 +76,9 @@ model VerificationToken {
 // Domain
 // ---------------------------------------------------------------------------
 
-enum Priority {
-  NONE
-  LOW
-  MEDIUM
-  HIGH
-}
-
-enum BillingType {
-  NONE   // not billable (personal task)
-  HOURLY // rateCents × hours worked
-  FIXED  // fixed priceCents on completion
-}
+// SQLite has no enums — we validate these via Zod at the server-action boundary.
+// Priority:    "NONE" | "LOW" | "MEDIUM" | "HIGH"
+// BillingType: "NONE" | "HOURLY" | "FIXED"
 
 model Project {
   id        String   @id @default(cuid())
@@ -141,13 +132,13 @@ model Task {
   completed   Boolean   @default(false)
   completedAt DateTime?
   dueAt       DateTime?
-  priority    Priority  @default(NONE)
+  priority    String    @default("NONE") // NONE | LOW | MEDIUM | HIGH
   sortOrder   Int       @default(0)
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
 
   // Hustle mode — if billable, revenue flows from this task
-  billingType BillingType @default(NONE)
+  billingType String @default("NONE") // NONE | HOURLY | FIXED
   rateCents   Int?
   priceCents  Int?
 
@@ -175,8 +166,6 @@ model TaskTag {
   @@id([taskId, tagId])
 }
 
-// Pomodoro / billable time. Attaching to a task = billable (kind="billable").
-// Standalone focus block = kind="focus".
 model TimeEntry {
   id        String    @id @default(cuid())
   userId    String
@@ -185,8 +174,7 @@ model TimeEntry {
   endedAt   DateTime?
   seconds   Int       @default(0)
 
-  // "focus" | "break" | "billable"
-  kind String @default("focus")
+  kind String @default("focus") // focus | break | billable
 
   user User  @relation(fields: [userId], references: [id], onDelete: Cascade)
   task Task? @relation(fields: [taskId], references: [id], onDelete: SetNull)
