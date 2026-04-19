@@ -1,36 +1,56 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# SideLootQuest
 
-## Getting Started
+> **Level up your side hustle. Track the loot.**
 
-First, run the development server:
+A task manager built for people building something after 5pm.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+Works like TickTick or Todoist — plus three things those can't do:
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- **Track revenue per task** (hourly rate or fixed price)
+- **Set aside tax** automatically on every dollar earned
+- **Clock billable hours** right from the Pomodoro timer
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Why this exists
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+General task managers (TickTick, Todoist, Things, TickTick) treat every task the same. But a side hustler's task isn't a chore — it's a *revenue event*. SideLootQuest knows the difference.
 
-## Learn More
+## Features
 
-To learn more about Next.js, take a look at the following resources:
+| | SideLootQuest | TickTick / Todoist |
+|---|:-:|:-:|
+| Tasks, projects, tags, priorities | ✓ | ✓ |
+| Natural-language dates (`tomorrow 3pm`) | ✓ | ✓ |
+| Pomodoro / focus timer | ✓ (free) | ✓ (paywalled) |
+| Revenue tracking per task | ✓ | — |
+| Billable-time logging against tasks | ✓ | — |
+| Tax set-aside jar | ✓ | — |
+| Client-level revenue view | ✓ | — |
+| Weekly earnings goal + pace | ✓ | — |
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Stack
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- **Next.js 16** (App Router, Turbopack)
+- **React 19.2**
+- **Prisma 7** + PostgreSQL (Neon free tier recommended)
+- **NextAuth v5** (GitHub OAuth)
+- **Tailwind CSS v4** + shadcn-style Radix primitives
+- **TypeScript** end-to-end
+- Dark-first UI (this is an after-5pm app)
 
-## Deploy on Vercel
+## Quick start
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+See [SETUP.md](./SETUP.md) for a 5-minute local setup.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Deploy to Vercel: see the bottom of SETUP.md.
+
+## Roadmap
+
+See [ROADMAP.md](./ROADMAP.md) for what's next — prioritized list with difficulty ratings and specific files to touch.
+
+## Contributing
+
+This is an early-stage project. PRs welcome. See [CLAUDE.md](./CLAUDE.md) for code conventions if you (or your AI assistant) are hacking on it.
+
+## License
+
+MIT
