@@ -5,13 +5,21 @@ import nextTs from "eslint-config-next/typescript";
 const eslintConfig = defineConfig([
   ...nextVitals,
   ...nextTs,
-  // Override default ignores of eslint-config-next.
+  {
+    rules: {
+      // React 19.2 rules. We lint against them but don't block CI/build — these
+      // fire on a few legitimate sync-from-prop / mount-read patterns that
+      // don't cause cascading renders in practice.
+      "react-hooks/set-state-in-effect": "warn",
+      "react-hooks/refs": "warn",
+    },
+  },
   globalIgnores([
-    // Default ignores of eslint-config-next:
     ".next/**",
     "out/**",
     "build/**",
     "next-env.d.ts",
+    "src/generated/**",
   ]),
 ]);
 

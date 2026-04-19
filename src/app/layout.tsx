@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { ThemeProvider, themeNoFlashScript } from "@/components/theme-provider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -15,7 +16,7 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "SideLootQuest — level up your side hustle",
   description:
-    "Task manager built for side hustlers. Track tasks, revenue, and tax set-aside — all in one place.",
+    "Task manager built for side hustlers. Kanban board, revenue tracking, tax set-aside, billable timer, and a freeform digital dashboard with whiteboard.",
 };
 
 export default function RootLayout({
@@ -27,8 +28,15 @@ export default function RootLayout({
     <html
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      suppressHydrationWarning
     >
-      <body className="min-h-full">{children}</body>
+      <head>
+        {/* Prevents flash-of-wrong-theme on first paint */}
+        <script dangerouslySetInnerHTML={{ __html: themeNoFlashScript }} />
+      </head>
+      <body className="min-h-full">
+        <ThemeProvider>{children}</ThemeProvider>
+      </body>
     </html>
   );
 }

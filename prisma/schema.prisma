@@ -28,6 +28,9 @@ model User {
   weeklyGoalCents Int    @default(0)
   timezone        String @default("America/New_York")
 
+  // UI
+  theme String @default("dark") // "light" | "dark" | "system"
+
   accounts    Account[]
   sessions    Session[]
   tasks       Task[]
@@ -35,6 +38,8 @@ model User {
   clients     Client[]
   tags        Tag[]
   timeEntries TimeEntry[]
+  columns     TaskColumn[]
+  widgets     Widget[]
 }
 
 model Account {
@@ -148,12 +153,60 @@ model Task {
   clientId String?
   client   Client?  @relation(fields: [clientId], references: [id], onDelete: SetNull)
 
+  // Kanban column on the /tasks board. Null = unassigned (shouldn't happen
+  // for new tasks — we default to the user's first column).
+  columnId String?
+  column   TaskColumn? @relation(fields: [columnId], references: [id], onDelete: SetNull)
+
   user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
   tags        TaskTag[]
   timeEntries TimeEntry[]
 
   @@index([userId, completed])
   @@index([userId, dueAt])
+  @@index([columnId, sortOrder])
+}
+
+// Kanban columns on /tasks. Users can rename / reorder / delete. Defaults:
+// "To Do" / "Doing" / "Done" (created on first signin).
+model TaskColumn {
+  id        String   @id @default(cuid())
+  userId    String
+  name      String
+  color     String   @default("#64748b")
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
+
+  user  User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tasks Task[]
+
+  @@index([userId, sortOrder])
+}
+
+// Freeform /board widgets. Content is JSON serialized per widget type:
+//   note:         { text: string }
+//   whiteboard:   { strokes: Array<{ color: string; width: number; points: Array<[number,number]> }> }
+//   timer:        { seconds: number; running: boolean; lastStartedAt: number | null }
+//   habit:        { days: boolean[]; label: string }
+//   quick-tasks:  { items: Array<{ text: string; done: boolean }> }
+model Widget {
+  id        String   @id @default(cuid())
+  userId    String
+  type      String   // "note" | "whiteboard" | "timer" | "habit" | "quick-tasks"
+  x         Int      @default(0)
+  y         Int      @default(0)
+  width     Int      @default(320)
+  height    Int      @default(260)
+  zIndex    Int      @default(1)
+  color     String   @default("#ffffff")
+  title     String   @default("")
+  content   String   @default("{}") // JSON blob
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
 }
 
 model TaskTag {

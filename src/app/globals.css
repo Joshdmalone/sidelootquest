@@ -25,8 +25,9 @@
   --radius-xl: 1rem;
 }
 
-:root {
-  /* Dark-first palette — SideLootQuest is a night-mode app for after-5pm work */
+/* DARK (default) */
+:root,
+.dark {
   --background: #0a0a0b;
   --foreground: #f4f4f5;
   --card: #111113;
@@ -37,7 +38,6 @@
   --input: #18181b;
   --ring: #8b5cf6;
 
-  /* Violet = quest/loot color */
   --primary: #8b5cf6;
   --primary-foreground: #ffffff;
 
@@ -47,9 +47,39 @@
   --destructive: #ef4444;
   --destructive-foreground: #ffffff;
 
-  /* Gold = money, revenue, loot */
   --gold: #f5c542;
   --gold-foreground: #1a1300;
+
+  --canvas-grid: rgba(255, 255, 255, 0.04);
+  --canvas-bg: #0a0a0b;
+}
+
+/* LIGHT */
+.light {
+  --background: #fafafa;
+  --foreground: #0a0a0b;
+  --card: #ffffff;
+  --card-foreground: #0a0a0b;
+  --muted: #f1f5f9;
+  --muted-foreground: #52525b;
+  --border: #e4e4e7;
+  --input: #ffffff;
+  --ring: #8b5cf6;
+
+  --primary: #7c3aed;
+  --primary-foreground: #ffffff;
+
+  --accent: #f1f5f9;
+  --accent-foreground: #0a0a0b;
+
+  --destructive: #dc2626;
+  --destructive-foreground: #ffffff;
+
+  --gold: #d97706;
+  --gold-foreground: #ffffff;
+
+  --canvas-grid: rgba(0, 0, 0, 0.06);
+  --canvas-bg: #fafafa;
 }
 
 * {
@@ -89,4 +119,18 @@ input[type="number"]::-webkit-inner-spin-button {
 }
 input[type="number"] {
   -moz-appearance: textfield;
+}
+
+/* Canvas grid for /board */
+.canvas-grid {
+  background-color: var(--canvas-bg);
+  background-image: radial-gradient(var(--canvas-grid) 1px, transparent 0);
+  background-size: 40px 40px;
+}
+
+/* Remove outline on button focus, use ring instead */
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible {
+  outline: none;
 }

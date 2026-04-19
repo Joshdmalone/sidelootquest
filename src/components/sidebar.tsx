@@ -2,11 +2,22 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Swords, ListChecks, FolderKanban, Users, Timer, Coins, Settings } from "lucide-react";
+import {
+  Swords,
+  ListChecks,
+  LayoutDashboard,
+  FolderKanban,
+  Users,
+  Timer,
+  Coins,
+  Settings,
+} from "lucide-react";
 import { cn } from "@/lib/utils";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 const NAV = [
   { href: "/tasks", label: "Tasks", icon: ListChecks },
+  { href: "/board", label: "Board", icon: LayoutDashboard },
   { href: "/projects", label: "Projects", icon: FolderKanban },
   { href: "/clients", label: "Clients", icon: Users },
   { href: "/focus", label: "Focus", icon: Timer },
@@ -49,8 +60,12 @@ export function Sidebar({
         })}
       </nav>
 
-      <div className="border-t border-border p-3">
-        <div className="flex items-center gap-3 rounded-md px-3 py-2">
+      <div className="space-y-3 border-t border-border p-3">
+        <div className="flex items-center justify-between px-1">
+          <span className="text-xs text-muted-foreground">Theme</span>
+          <ThemeToggle />
+        </div>
+        <div className="flex items-center gap-3 rounded-md px-2 py-1.5">
           {user.image ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img src={user.image} alt="" className="h-7 w-7 rounded-full" />
